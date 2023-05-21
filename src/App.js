@@ -1,23 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import {tareasSucces} from './features/taskSlice';
+import React,{useEffect} from 'react';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    lodingData();
+  }, [])
+  
+  const lodingData = async () => {
+    await axios.get('http://localhost:5000/tareas')
+    .then(function (response){
+      const data = response.data
+      dispatch(tareasSucces(data))
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TaskForm/>
+      <TaskList/>
     </div>
   );
 }
